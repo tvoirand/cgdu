@@ -1,0 +1,4 @@
+name: my_drive
+dependencies:
+  - python=3
+  - pydrive
