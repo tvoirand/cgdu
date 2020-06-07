@@ -36,23 +36,28 @@ class MyFolder(MyFile):
         """
         MyFolder constructor.
         """
-        super(MyFolder, self).__init__(*args, **kwargs)
-        self.children = []
+
+        super(MyFolder, self).__init__(*args, **kwargs) # inherit MyFile constructor
+        self.children = [] # initiate children list
 
     def print_children(self, indent):
         """
+        Print this folder's children to terminal
         Input:
             -indent     int
         """
 
+        # loop through children
         for child in self.children:
 
+            # print directly if child is file
             if type(child) is MyFile:
                 print("{}".format(child.name.rjust(len(child.name)+indent)))
 
+            # call method again with increase indentation (sublevel) if child is folder
             elif type(child) is MyFolder:
                 print("{}".format(child.name.rjust(len(child.name)+indent)))
-                child.print_children(indent+4)
+                child.print_children(indent + 4)
 
     def render_content(self, win):
         """
@@ -61,7 +66,10 @@ class MyFolder(MyFile):
             -win    curses window instance
         """
 
+        # render line for parent directory
         win.addstr(0, 0, "..", curses.color_pair(1))
+
+        # render line for each children
         for i, child in enumerate(self.children):
             win.addstr(i+1, 0, child.name, curses.color_pair(1))
 

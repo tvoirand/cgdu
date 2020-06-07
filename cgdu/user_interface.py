@@ -6,8 +6,8 @@ Terminal user interface module using curses for Curses Google Drive Usage.
 import curses
 
 # local imports
-from tree import MyFile
-from tree import MyFolder
+from directory_tree import MyFile
+from directory_tree import MyFolder
 
 
 def user_interface(stdscr, root_folder):
@@ -49,21 +49,24 @@ def user_interface(stdscr, root_folder):
         elif k == curses.KEY_UP:
             cursor_y = cursor_y - 1
 
-        # keep cursor inside window bounds
-        cursor_x = max(0, cursor_x)
-        cursor_x = min(width-1, cursor_x)
+        # keep cursor inside the current tree bounds
         cursor_y = max(0, cursor_y)
         cursor_y = min(len(current_folder.children), cursor_y)
 
-        # changing folder if enter is pressed
+        # changing directory if "enter" key (coded 10 in ASCII) is pressed
         if k == 10:
-            if cursor_y == 0:
-                next_folder = current_folder.parent
+
+            # get child currently selected by cursor
+            if cursor_y != 0:
+                selected_child = current_folder.children[cursor_y-1]
             else:
-                next_folder = current_folder.children[cursor_y-1]
-            if type(next_folder) is MyFolder:
-                current_folder = next_folder
-                cursor_y = 0
+                # select parent folder if cursor is on first line, which should contain ".."
+                selected_child = current_folder.parent
+
+            # move to selected child if it is a folder
+            if type(selected_child) is MyFolder:
+                current_folder = selected_child
+                cursor_y = 0 # move cursor to first line
 
         # rendering current folder
         current_folder.render_content(stdscr)
