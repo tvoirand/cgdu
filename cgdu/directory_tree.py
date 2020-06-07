@@ -1,5 +1,5 @@
 """
-Define classes to handle directory tree.
+Define classes to handle directory tree for Curses Google Drive Usage.
 """
 
 # standard imports
