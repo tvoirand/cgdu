@@ -14,7 +14,7 @@ from directory_tree import MyFile
 from directory_tree import MyFolder
 
 
-def render_contents(folder, win):
+def render_folder_contents(folder, win):
     """
     Render folder's contents using a curses window.
     Input:
@@ -31,10 +31,10 @@ def render_contents(folder, win):
         """
 
         # initiate child display string
-        child_str = "  "
+        child_str = ""
 
         # add size
-        child_str += hf.size(child.size, system=hf.si).rjust(len(hf.size(largest_size, system=hf.si)))
+        child_str += hf.size(child.size, system=hf.si).rjust(10)
 
         # add size bar
         size_bar = ""
@@ -58,7 +58,7 @@ def render_contents(folder, win):
     # sort children by size
     folder.children.sort(key=lambda x: x.size, reverse=True)
 
-    # get largest size to compute size string length and size bar
+    # get largest size to compute size bar
     largest_size = folder.children[0].size # in bytes
 
     # render line for each children
@@ -100,16 +100,6 @@ def user_interface(stdscr, root_folder):
         stdscr.clear()
         height, width = stdscr.getmaxyx()
 
-        # move cursor
-        if k == curses.KEY_DOWN:
-            cursor_y = cursor_y + 1
-        elif k == curses.KEY_UP:
-            cursor_y = cursor_y - 1
-
-        # keep cursor inside the current tree bounds
-        cursor_y = max(0, cursor_y)
-        cursor_y = min(len(current_folder.children), cursor_y)
-
         # changing directory if "enter" key (coded 10 in ASCII) is pressed
         if k == 10:
 
@@ -125,8 +115,18 @@ def user_interface(stdscr, root_folder):
                 current_folder = selected_child
                 cursor_y = 0 # move cursor to first line
 
+        # get new cursor location
+        if k == curses.KEY_DOWN:
+            cursor_y = cursor_y + 1
+        elif k == curses.KEY_UP:
+            cursor_y = cursor_y - 1
+
         # rendering current folder
-        render_contents(current_folder, stdscr)
+        render_folder_contents(current_folder, stdscr)
+
+        # keep cursor inside the current tree bounds
+        cursor_y = max(0, cursor_y)
+        cursor_y = min(len(current_folder.children), cursor_y)
 
         # render debugging line
         debuggingstr = "Next folder: {}".format(0)
