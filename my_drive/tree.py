@@ -8,10 +8,19 @@ import curses
 
 class MyFile:
     """
-    Define a file.
+    Defines a file.
     """
 
-    def __init__(self, name, parent, level, size):
+    def __init__(self, name, parent, level, size=0):
+        """
+        MyFile constructor.
+        Input:
+            -name       str
+            -parent     MyFolder or MyTree instance
+            -level      int
+            -size       int (bytes)
+        """
+
         self.name = name
         self.parent = parent
         self.level = level
@@ -20,14 +29,14 @@ class MyFile:
 
 class MyFolder(MyFile):
     """
-    Define a folder.
+    Defines a folder. Subclass of MyFile.
     """
 
-    def __init__(self, name, parent, level, size):
-        self.name = name
-        self.parent = parent
-        self.level = level
-        self.size = size
+    def __init__(self, *args, **kwargs):
+        """
+        MyFolder constructor.
+        """
+        super(MyFolder, self).__init__(*args, **kwargs)
         self.children = []
 
     def print_children(self, indent):
@@ -47,6 +56,7 @@ class MyFolder(MyFile):
 
     def render_content(self, win):
         """
+        Render directory contents using a curses window.
         Input:
             -win    curses window instance
         """
