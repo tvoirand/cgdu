@@ -1,5 +1,5 @@
 """
-Script to test curses.
+Terminal user interface module using curses for Curses Google Drive Usage.
 """
 
 # standard imports
@@ -10,30 +10,13 @@ from tree import MyFile
 from tree import MyFolder
 
 
-def draw_menu(stdscr):
+def user_interface(stdscr, root_folder):
     """
+    Draw Curses Google Drive Usage user interface on terminal using curses.
     Input:
-        -stdscr     curses stdscr window object
+        -stdscr         curses stdscr window object
+        -root_folder    MyFolder instance with parent "root"
     """
-
-    # prepare dummy tree
-    root_folder = MyFolder("root_folder", "root", 0, 10000)
-    root_file = MyFile("root_file", root_folder, 1, 1000)
-    folder_1 = MyFolder("folder_1", root_folder, 1, 5000)
-    folder_1_file_1 = MyFile("folder_1_file_1", folder_1, 2, 4000)
-    folder_1_file_2 = MyFile("folder_1_file_2", folder_1, 2, 1000)
-    folder_2 = MyFolder("folder_2", root_folder, 1, 6000)
-    folder_2_file_1 = MyFile("folder_2_file_1", folder_2, 2, 4000)
-    folder_2_folder_1 = MyFolder("folder_2_folder_1", folder_2, 2, 2000)
-    folder_2_folder_1_file_1 = MyFile("folder_2_folder_1_file_1", folder_2_folder_1, 3, 2000)
-    root_folder.children.append(root_file)
-    root_folder.children.append(folder_1)
-    root_folder.children.append(folder_2)
-    folder_1.children.append(folder_1_file_1)
-    folder_1.children.append(folder_1_file_2)
-    folder_2.children.append(folder_2_file_1)
-    folder_2.children.append(folder_2_folder_1)
-    folder_2_folder_1.children.append(folder_2_folder_1_file_1)
 
     # initiate current folder
     current_folder = root_folder
@@ -106,7 +89,27 @@ def draw_menu(stdscr):
         k = stdscr.getch()
 
 def main():
-    curses.wrapper(draw_menu)
+
+    # prepare dummy tree
+    root_folder = MyFolder("root_folder", "root", 0, 10000)
+    root_file = MyFile("root_file", root_folder, 1, 1000)
+    folder_1 = MyFolder("folder_1", root_folder, 1, 5000)
+    folder_1_file_1 = MyFile("folder_1_file_1", folder_1, 2, 4000)
+    folder_1_file_2 = MyFile("folder_1_file_2", folder_1, 2, 1000)
+    folder_2 = MyFolder("folder_2", root_folder, 1, 6000)
+    folder_2_file_1 = MyFile("folder_2_file_1", folder_2, 2, 4000)
+    folder_2_folder_1 = MyFolder("folder_2_folder_1", folder_2, 2, 2000)
+    folder_2_folder_1_file_1 = MyFile("folder_2_folder_1_file_1", folder_2_folder_1, 3, 2000)
+    root_folder.children.append(root_file)
+    root_folder.children.append(folder_1)
+    root_folder.children.append(folder_2)
+    folder_1.children.append(folder_1_file_1)
+    folder_1.children.append(folder_1_file_2)
+    folder_2.children.append(folder_2_file_1)
+    folder_2.children.append(folder_2_folder_1)
+    folder_2_folder_1.children.append(folder_2_folder_1_file_1)
+
+    curses.wrapper(user_interface, root_folder)
 
 if __name__ == "__main__":
     main()
