@@ -11,12 +11,12 @@ class MyFile:
     Defines a file.
     """
 
-    def __init__(self, name, parent, level, size=0):
+    def __init__(self, name, parent="root", level=0, size=0):
         """
         MyFile constructor.
         Input:
             -name       str
-            -parent     MyFolder or MyTree instance
+            -parent     MyFolder instance or "root"
             -level      int
             -size       int (bytes)
         """
