@@ -69,7 +69,7 @@ def user_interface(stdscr, root_folder):
                 cursor_y = 0 # move cursor to first line
 
         # rendering current folder
-        current_folder.render_content(stdscr)
+        current_folder.render_contents(stdscr)
 
         # render debugging line
         debuggingstr = "Next folder: {}".format(0)
@@ -94,15 +94,15 @@ def user_interface(stdscr, root_folder):
 def main():
 
     # prepare dummy tree
-    root_folder = MyFolder("root_folder", "root", 0, 10000)
-    root_file = MyFile("root_file", root_folder, 1, 1000)
-    folder_1 = MyFolder("folder_1", root_folder, 1, 5000)
-    folder_1_file_1 = MyFile("folder_1_file_1", folder_1, 2, 4000)
-    folder_1_file_2 = MyFile("folder_1_file_2", folder_1, 2, 1000)
-    folder_2 = MyFolder("folder_2", root_folder, 1, 6000)
-    folder_2_file_1 = MyFile("folder_2_file_1", folder_2, 2, 4000)
-    folder_2_folder_1 = MyFolder("folder_2_folder_1", folder_2, 2, 2000)
-    folder_2_folder_1_file_1 = MyFile("folder_2_folder_1_file_1", folder_2_folder_1, 3, 2000)
+    root_folder = MyFolder("root_folder", "root", 0, 1000)
+    root_file = MyFile("root_file", root_folder, 1, 100)
+    folder_1 = MyFolder("folder_1", root_folder, 1, 500)
+    folder_1_file_1 = MyFile("folder_1_file_1", folder_1, 2, 400)
+    folder_1_file_2 = MyFile("folder_1_file_2", folder_1, 2, 100)
+    folder_2 = MyFolder("folder_2", root_folder, 1, 600)
+    folder_2_file_1 = MyFile("folder_2_file_1", folder_2, 2, 40)
+    folder_2_folder_1 = MyFolder("folder_2_folder_1", folder_2, 2, 460)
+    folder_2_folder_1_file_1 = MyFile("folder_2_folder_1_file_1", folder_2_folder_1, 3, 460)
     root_folder.children.append(root_file)
     root_folder.children.append(folder_1)
     root_folder.children.append(folder_2)
