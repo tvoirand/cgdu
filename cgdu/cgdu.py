@@ -27,6 +27,8 @@ def scan_google_drive_folder(drive, google_drive_folder, parent="root"):
         -folder                 MyFolder instance
     """
 
+    print("Scanning {}".format(google_drive_folder["title"]))
+
     # initiate folder
     total_size = 0
     folder = MyFolder(
@@ -87,7 +89,9 @@ def main():
 
     # iterate through all elements in root folder
     root_elements = drive.ListFile({"q": "'root' in parents"}).GetList()
-    for i, element in enumerate(root_elements[:3]):
+    for i, element in enumerate(root_elements):
+
+        print("Scanning {} ({} of {})".format(element["title"], i, len(root_elements)))
 
         # identify files for which the size is known
         if "fileSize" in element.keys():
@@ -119,9 +123,7 @@ def main():
         else:
             root_folder.children.append(MyFile(element["title"], parent=root_folder, size=0))
 
-    # root_folder.print_children(0)
-
-    # curses.wrapper(user_interface, root_folder)
+    curses.wrapper(user_interface, root_folder)
 
 
 if __name__ == "__main__":
