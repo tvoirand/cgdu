@@ -59,10 +59,13 @@ def render_folder_contents(folder, win):
     folder.children.sort(key=lambda x: x.size, reverse=True)
 
     # get largest size to compute size bar
-    largest_size = folder.children[0].size # in bytes
+    largest_size = folder.children[0].size
 
     # render line for each children
+    height, _ = win.getmaxyx()
     for i, child in enumerate(folder.children):
+        if i > height - 2: # stop display window too small for contents
+            break
         child_str = create_child_str(child, largest_size)
         win.addstr(i+1, 0, child_str, curses.color_pair(1))
 
