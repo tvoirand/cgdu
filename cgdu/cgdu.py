@@ -31,10 +31,7 @@ def scan_google_drive_folder(drive, google_drive_folder, parent="root"):
 
     # initiate folder
     total_size = 0
-    folder = MyFolder(
-        google_drive_folder["title"],
-        parent=parent
-    )
+    folder = MyFolder(google_drive_folder["title"], parent=parent)
 
     # get list of contents
     folder_id = google_drive_folder["id"]
@@ -53,7 +50,9 @@ def scan_google_drive_folder(drive, google_drive_folder, parent="root"):
             folder.size += file_size
 
             # add new file to this folder's children
-            folder.children.append(MyFile(element["title"], parent=folder, size=file_size))
+            folder.children.append(
+                MyFile(element["title"], parent=folder, size=file_size)
+            )
 
         # identify subfolders
         elif "folder" in element["mimeType"]:
@@ -121,7 +120,9 @@ def main():
 
         # add any other element and affect size of zero bytes
         else:
-            root_folder.children.append(MyFile(element["title"], parent=root_folder, size=0))
+            root_folder.children.append(
+                MyFile(element["title"], parent=root_folder, size=0)
+            )
 
     curses.wrapper(user_interface, root_folder)
 

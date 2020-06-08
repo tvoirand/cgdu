@@ -38,10 +38,13 @@ def render_folder_contents(folder, win):
 
         # add size bar
         size_bar = ""
-        nb_characters = math.floor(child.size * 10 / largest_size) # compute nb characters
-        for i in range(nb_characters): size_bar += "#" # fill size bar with characters
-        size_bar = size_bar.ljust(10) # add trailing whitespaces
-        size_bar = "[{}]".format(size_bar) # add braces
+        nb_characters = math.floor(
+            child.size * 10 / largest_size
+        )  # compute nb characters
+        for i in range(nb_characters):
+            size_bar += "#"  # fill size bar with characters
+        size_bar = size_bar.ljust(10)  # add trailing whitespaces
+        size_bar = "[{}]".format(size_bar)  # add braces
         child_str += size_bar
 
         # add child name
@@ -64,10 +67,10 @@ def render_folder_contents(folder, win):
     # render line for each children
     height, _ = win.getmaxyx()
     for i, child in enumerate(folder.children):
-        if i > height - 2: # stop display window too small for contents
+        if i > height - 2:  # stop display window too small for contents
             break
         child_str = create_child_str(child, largest_size)
-        win.addstr(i+1, 0, child_str, curses.color_pair(1))
+        win.addstr(i + 1, 0, child_str, curses.color_pair(1))
 
 
 def user_interface(stdscr, root_folder):
@@ -97,7 +100,7 @@ def user_interface(stdscr, root_folder):
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
     # loop where k is the last character pressed
-    while (k != ord('q')):
+    while k != ord("q"):
 
         # initialization
         stdscr.clear()
@@ -108,7 +111,7 @@ def user_interface(stdscr, root_folder):
 
             # get child currently selected by cursor
             if cursor_y != 0:
-                selected_child = current_folder.children[cursor_y-1]
+                selected_child = current_folder.children[cursor_y - 1]
             else:
                 # select parent folder if cursor is on first line, which should contain ".."
                 selected_child = current_folder.parent
@@ -116,7 +119,7 @@ def user_interface(stdscr, root_folder):
             # move to selected child if it is a folder
             if type(selected_child) is MyFolder:
                 current_folder = selected_child
-                cursor_y = 0 # move cursor to first line
+                cursor_y = 0  # move cursor to first line
 
         # get new cursor location
         if k == curses.KEY_DOWN:
@@ -133,13 +136,17 @@ def user_interface(stdscr, root_folder):
 
         # render debugging line
         debuggingstr = "Next folder: {}".format(0)
-        stdscr.addstr(height-2, 0, debuggingstr)
+        stdscr.addstr(height - 2, 0, debuggingstr)
 
         # render status bar
-        statusbarstr = "Press 'q' to exit | Last key: {} | Current folder: {}".format(k, current_folder.name)
+        statusbarstr = "Press 'q' to exit | Last key: {} | Current folder: {}".format(
+            k, current_folder.name
+        )
         stdscr.attron(curses.color_pair(3))
-        stdscr.addstr(height-1, 0, statusbarstr)
-        stdscr.addstr(height-1, len(statusbarstr), " " * (width - len(statusbarstr) - 1))
+        stdscr.addstr(height - 1, 0, statusbarstr)
+        stdscr.addstr(
+            height - 1, len(statusbarstr), " " * (width - len(statusbarstr) - 1)
+        )
         stdscr.attroff(curses.color_pair(3))
 
         # move cursor
@@ -163,7 +170,9 @@ if __name__ == "__main__":
     folder_2 = MyFolder("folder_2", root_folder, 1, 600)
     folder_2_file_1 = MyFile("folder_2_file_1", folder_2, 2, 40)
     folder_2_folder_1 = MyFolder("folder_2_folder_1", folder_2, 2, 460)
-    folder_2_folder_1_file_1 = MyFile("folder_2_folder_1_file_1", folder_2_folder_1, 3, 460)
+    folder_2_folder_1_file_1 = MyFile(
+        "folder_2_folder_1_file_1", folder_2_folder_1, 3, 460
+    )
     root_folder.children.append(root_file)
     root_folder.children.append(folder_1)
     root_folder.children.append(folder_2)
