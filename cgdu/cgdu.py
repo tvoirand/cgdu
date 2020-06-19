@@ -3,6 +3,7 @@ Curses Google Drive Usage main script.
 """
 
 # standard import
+import os
 import curses
 
 # third party imports
@@ -15,19 +16,19 @@ from directory_tree import MyFile
 from directory_tree import MyFolder
 
 
-def scan_google_drive_folder(drive, google_drive_folder, parent="root"):
+def scan_google_drive_folder(drive, google_drive_folder, path, parent="root"):
     """
     Recursively scan google drive folder, computing size of each children.
     Input:
         -drive                  pydrive.drive.GoogleDrive instance
         -google_drive_folder    GoogleDriveFile instance
             mimeType must contain the string "folder"
+        -path                   str
+            used to display scanning progress
         -parent                 MyFolder instance or "root"
     Return:
         -folder                 MyFolder instance
     """
-
-    print("Scanning {}".format(google_drive_folder["title"]))
 
     # initiate folder
     total_size = 0
@@ -39,6 +40,12 @@ def scan_google_drive_folder(drive, google_drive_folder, parent="root"):
 
     # loop through each element
     for element in contents_list:
+
+        # display scanning status to user
+        progress_string = "\rScanning: {}".format(os.path.join(path, element["title"]))
+        width = int(os.popen("stty size", "r").read().split()[1])  # get terminal width
+        progress_string = progress_string.ljust(width)[: width - 2] # adjust display
+        print(progress_string, end="", flush=True)
 
         # identify files for which the size is known
         if "fileSize" in element.keys():
@@ -58,7 +65,9 @@ def scan_google_drive_folder(drive, google_drive_folder, parent="root"):
         elif "folder" in element["mimeType"]:
 
             # scan subfolder
-            subfolder = scan_google_drive_folder(drive, element, parent=folder)
+            subfolder = scan_google_drive_folder(
+                drive, element, os.path.join(path, element["title"]), parent=folder,
+            )
 
             # add size of file to this folder's tree_size
             folder.size += subfolder.size
@@ -90,7 +99,11 @@ def main():
     root_elements = drive.ListFile({"q": "'root' in parents"}).GetList()
     for i, element in enumerate(root_elements):
 
-        print("Scanning {} ({} of {})".format(element["title"], i, len(root_elements)))
+        # display scanning status to user
+        progress_string = "\rScanning: {}".format(element["title"])
+        width = int(os.popen("stty size", "r").read().split()[1])  # get terminal width
+        progress_string = progress_string.ljust(width)[: width - 2]  # adjust display
+        print(progress_string, end="", flush=True)
 
         # identify files for which the size is known
         if "fileSize" in element.keys():
@@ -110,7 +123,9 @@ def main():
         elif "folder" in element["mimeType"]:
 
             # scan subfolder
-            subfolder = scan_google_drive_folder(drive, element, parent=root_folder)
+            subfolder = scan_google_drive_folder(
+                drive, element, element["title"], parent=root_folder
+            )
 
             # add size of file to this folder's tree_size
             root_folder.size += subfolder.size
