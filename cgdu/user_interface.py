@@ -14,7 +14,7 @@ from directory_tree import MyFile
 from directory_tree import MyFolder
 
 
-def render_folder_contents(folder, win, scrolling, max_lines):
+def render_folder_contents(folder, win, scrolling, max_lines, width):
     """
     Render folder's contents using a curses window.
     Input:
@@ -22,6 +22,7 @@ def render_folder_contents(folder, win, scrolling, max_lines):
         -win                    curses window instance
         -scrolling              int
         -max_lines              int
+        -width                  int
     """
 
     def create_child_str(child, largest_size):
@@ -68,7 +69,7 @@ def render_folder_contents(folder, win, scrolling, max_lines):
 
     # render line for each children
     for i, child in enumerate(folder.children[scrolling : scrolling + max_lines]):
-        child_str = create_child_str(child, largest_size)
+        child_str = create_child_str(child, largest_size)[: width - 2]
         win.addstr(i + 1, 0, child_str, curses.color_pair(1))
 
 
@@ -134,7 +135,7 @@ def user_interface(stdscr, root_folder):
                 scrolling -= 1
 
         # rendering current folder
-        render_folder_contents(current_folder, stdscr, scrolling, max_lines)
+        render_folder_contents(current_folder, stdscr, scrolling, max_lines, width)
 
         # keep cursor inside the current tree bounds
         cursor_y = max(0, cursor_y)
@@ -143,6 +144,7 @@ def user_interface(stdscr, root_folder):
         # render status bar
         statusbarstr = "Use arrows and 'enter' to navigate, press 'q' to exit"
         statusbarstr += " | Current folder: {}".format(current_folder.name)
+        statusbarstr = statusbarstr[: width - 2]
         stdscr.attron(curses.color_pair(3))
         stdscr.addstr(height - 1, 0, statusbarstr)
         stdscr.addstr(
