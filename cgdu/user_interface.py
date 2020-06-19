@@ -102,8 +102,8 @@ def user_interface(stdscr, root_folder):
         height, width = stdscr.getmaxyx()
         max_lines = height - 2  # -2 leaves room for status bar
 
-        # changing directory if "enter" key (coded 10 in ASCII) is pressed
-        if k == 10:
+        # changing directory if "enter" key (coded 10 in ASCII) or right key is pressed
+        if k == 10 or k == curses.KEY_RIGHT:
 
             # get child currently selected by cursor
             if cursor_y != 0:
@@ -117,6 +117,12 @@ def user_interface(stdscr, root_folder):
                 current_folder = selected_child
                 cursor_y = 0  # move cursor to first line
                 scrolling = 0  # reinitiate scrolling
+
+        # changing to parent directory if left key is pressed
+        if k == curses.KEY_LEFT:
+            current_folder = current_folder.parent
+            cursor_y = 0  # move cursor to first line
+            scrolling = 0  # reinitiate scrolling
 
         # get new cursor location
         if k == curses.KEY_DOWN:
@@ -136,7 +142,7 @@ def user_interface(stdscr, root_folder):
         cursor_y = min(len(current_folder.children) - scrolling, cursor_y, max_lines)
 
         # render status bar
-        statusbarstr = "Use arrows and 'enter' to navigate, press 'q' to exit"
+        statusbarstr = "Use arrows to navigate, press 'q' to exit"
         statusbarstr += " | Current folder: {}".format(current_folder.name)
         statusbarstr = statusbarstr[: width - 2]
         stdscr.addstr(height - 1, 0, statusbarstr)
