@@ -59,7 +59,7 @@ def render_folder_contents(folder, win, scrolling, max_lines, width):
         return child_str
 
     # render line for parent directory
-    win.addstr(0, 22, "/..", curses.color_pair(1))
+    win.addstr(0, 22, "/..")
 
     # sort children by size
     folder.children.sort(key=lambda x: x.size, reverse=True)
@@ -70,7 +70,7 @@ def render_folder_contents(folder, win, scrolling, max_lines, width):
     # render line for each children
     for i, child in enumerate(folder.children[scrolling : scrolling + max_lines]):
         child_str = create_child_str(child, largest_size)[: width - 2]
-        win.addstr(i + 1, 0, child_str, curses.color_pair(1))
+        win.addstr(i + 1, 0, child_str)
 
 
 def user_interface(stdscr, root_folder):
@@ -93,12 +93,6 @@ def user_interface(stdscr, root_folder):
     # clear and refresh the screen for a blank canvas
     stdscr.clear()
     stdscr.refresh()
-
-    # start colors in curses
-    curses.start_color()
-    curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
-    curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
     # loop where k is the last character pressed
     while k != ord("q"):
@@ -145,12 +139,10 @@ def user_interface(stdscr, root_folder):
         statusbarstr = "Use arrows and 'enter' to navigate, press 'q' to exit"
         statusbarstr += " | Current folder: {}".format(current_folder.name)
         statusbarstr = statusbarstr[: width - 2]
-        stdscr.attron(curses.color_pair(3))
         stdscr.addstr(height - 1, 0, statusbarstr)
         stdscr.addstr(
             height - 1, len(statusbarstr), " " * (width - len(statusbarstr) - 1)
         )
-        stdscr.attroff(curses.color_pair(3))
 
         # move cursor
         stdscr.move(cursor_y, cursor_x)
