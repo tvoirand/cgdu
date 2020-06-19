@@ -152,31 +152,3 @@ def user_interface(stdscr, root_folder):
 
         # wait for next input
         k = stdscr.getch()
-
-
-if __name__ == "__main__":
-
-    # prepare dummy tree
-    root_folder = MyFolder("root_folder", "root", 0, 1000)
-    root_file = MyFile("root_file", root_folder, 1, 100)
-    folder_1 = MyFolder("folder_1", root_folder, 1, 500)
-    folder_1_folder_1 = MyFolder("folder_1_folder_1", folder_1, 2, 0)
-    folder_1_file_1 = MyFile("folder_1_file_1", folder_1, 2, 400)
-    folder_1_file_2 = MyFile("folder_1_file_2", folder_1, 2, 100)
-    folder_2 = MyFolder("folder_2", root_folder, 1, 600)
-    folder_2_file_1 = MyFile("folder_2_file_1", folder_2, 2, 40)
-    folder_2_folder_1 = MyFolder("folder_2_folder_1", folder_2, 2, 460)
-    folder_2_folder_1_file_1 = MyFile(
-        "folder_2_folder_1_file_1", folder_2_folder_1, 3, 460
-    )
-    root_folder.children.append(root_file)
-    root_folder.children.append(folder_1)
-    root_folder.children.append(folder_2)
-    folder_1.children.append(folder_1_folder_1)
-    folder_1.children.append(folder_1_file_1)
-    folder_1.children.append(folder_1_file_2)
-    folder_2.children.append(folder_2_file_1)
-    folder_2.children.append(folder_2_folder_1)
-    folder_2_folder_1.children.append(folder_2_folder_1_file_1)
-
-    curses.wrapper(user_interface, root_folder)
