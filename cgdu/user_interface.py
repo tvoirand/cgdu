@@ -58,7 +58,7 @@ def render_folder_contents(folder, win, scrolling, max_lines):
         return child_str
 
     # render line for parent directory
-    win.addstr(0, 18, "/..", curses.color_pair(1))
+    win.addstr(0, 22, "/..", curses.color_pair(1))
 
     # sort children by size
     folder.children.sort(key=lambda x: x.size, reverse=True)
@@ -67,7 +67,7 @@ def render_folder_contents(folder, win, scrolling, max_lines):
     largest_size = folder.children[0].size
 
     # render line for each children
-    for i, child in enumerate(folder.children[scrolling:scrolling + max_lines]):
+    for i, child in enumerate(folder.children[scrolling : scrolling + max_lines]):
         child_str = create_child_str(child, largest_size)
         win.addstr(i + 1, 0, child_str, curses.color_pair(1))
 
@@ -105,7 +105,7 @@ def user_interface(stdscr, root_folder):
         # initialization
         stdscr.clear()
         height, width = stdscr.getmaxyx()
-        max_lines = height - 1 # -1 leaves room for status bar
+        max_lines = height - 2  # -2 leaves room for status bar
 
         # changing directory if "enter" key (coded 10 in ASCII) is pressed
         if k == 10:
@@ -121,16 +121,16 @@ def user_interface(stdscr, root_folder):
             if type(selected_child) is MyFolder:
                 current_folder = selected_child
                 cursor_y = 0  # move cursor to first line
-                scrolling = 0 # reinitiate scrolling
+                scrolling = 0  # reinitiate scrolling
 
         # get new cursor location
         if k == curses.KEY_DOWN:
             cursor_y = cursor_y + 1
-            if cursor_y > max_lines: # scroll down
+            if cursor_y > max_lines:  # scroll down
                 scrolling += 1
         elif k == curses.KEY_UP:
             cursor_y = cursor_y - 1
-            if cursor_y < 0 and scrolling > 0: # scroll up
+            if cursor_y < 0 and scrolling > 0:  # scroll up
                 scrolling -= 1
 
         # rendering current folder
@@ -141,8 +141,8 @@ def user_interface(stdscr, root_folder):
         cursor_y = min(len(current_folder.children) - scrolling, cursor_y, max_lines)
 
         # render status bar
-        statusbarstr = "Press 'q' to exit | Last key: {} | Current folder: {}".format(
-            k, current_folder.name
+        statusbarstr = "Press 'q' to exit | Current folder: {}".format(
+            current_folder.name
         )
         stdscr.attron(curses.color_pair(3))
         stdscr.addstr(height - 1, 0, statusbarstr)
