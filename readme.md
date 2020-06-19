@@ -17,7 +17,3 @@ Python 3 with the following packages:
 *   Duplicate `example_client_secrets.json` in the `config` folder using `client_secrets.json` as filename and store your client-id and client-secret in the new file
 *   Install the dependencies, for example with a conda environement using the `environment.yml` file
 *   Run the `cgdu.py` script
-
-## Todo
-
-*   clean up status bar

@@ -117,8 +117,8 @@ def user_interface(stdscr, root_folder):
                 # select parent folder if cursor is on first line, which should contain ".."
                 selected_child = current_folder.parent
 
-            # move to selected child if it is a folder
-            if type(selected_child) is MyFolder:
+            # move to selected child if it is a non empty folder
+            if type(selected_child) is MyFolder and selected_child.size != 0:
                 current_folder = selected_child
                 cursor_y = 0  # move cursor to first line
                 scrolling = 0  # reinitiate scrolling
@@ -141,9 +141,8 @@ def user_interface(stdscr, root_folder):
         cursor_y = min(len(current_folder.children) - scrolling, cursor_y, max_lines)
 
         # render status bar
-        statusbarstr = "Press 'q' to exit | Current folder: {}".format(
-            current_folder.name
-        )
+        statusbarstr = "Use arrows and 'enter' to navigate, press 'q' to exit"
+        statusbarstr += " | Current folder: {}".format(current_folder.name)
         stdscr.attron(curses.color_pair(3))
         stdscr.addstr(height - 1, 0, statusbarstr)
         stdscr.addstr(
@@ -167,6 +166,7 @@ if __name__ == "__main__":
     root_folder = MyFolder("root_folder", "root", 0, 1000)
     root_file = MyFile("root_file", root_folder, 1, 100)
     folder_1 = MyFolder("folder_1", root_folder, 1, 500)
+    folder_1_folder_1 = MyFolder("folder_1_folder_1", folder_1, 2, 0)
     folder_1_file_1 = MyFile("folder_1_file_1", folder_1, 2, 400)
     folder_1_file_2 = MyFile("folder_1_file_2", folder_1, 2, 100)
     folder_2 = MyFolder("folder_2", root_folder, 1, 600)
@@ -178,6 +178,7 @@ if __name__ == "__main__":
     root_folder.children.append(root_file)
     root_folder.children.append(folder_1)
     root_folder.children.append(folder_2)
+    folder_1.children.append(folder_1_folder_1)
     folder_1.children.append(folder_1_file_1)
     folder_1.children.append(folder_1_file_2)
     folder_2.children.append(folder_2_file_1)
