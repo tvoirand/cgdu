@@ -14,12 +14,14 @@ from directory_tree import MyFile
 from directory_tree import MyFolder
 
 
-def render_folder_contents(folder, win):
+def render_folder_contents(folder, win, scrolling, max_lines):
     """
     Render folder's contents using a curses window.
     Input:
-        -folder     MyFolder instance
-        -win        curses window instance
+        -folder                 MyFolder instance
+        -win                    curses window instance
+        -scrolling              int
+        -max_lines              int
     """
 
     def create_child_str(child, largest_size):
@@ -65,10 +67,7 @@ def render_folder_contents(folder, win):
     largest_size = folder.children[0].size
 
     # render line for each children
-    height, _ = win.getmaxyx()
-    for i, child in enumerate(folder.children):
-        if i > height - 2:  # stop display window too small for contents
-            break
+    for i, child in enumerate(folder.children[scrolling:scrolling + max_lines]):
         child_str = create_child_str(child, largest_size)
         win.addstr(i + 1, 0, child_str, curses.color_pair(1))
 
@@ -84,10 +83,11 @@ def user_interface(stdscr, root_folder):
     # initiate current folder
     current_folder = root_folder
 
-    # initiate key value and cursor location
+    # initiate key value, cursor location, and scrolling value
     k = 0
     cursor_x = 0
     cursor_y = 0
+    scrolling = 0
 
     # clear and refresh the screen for a blank canvas
     stdscr.clear()
@@ -105,13 +105,14 @@ def user_interface(stdscr, root_folder):
         # initialization
         stdscr.clear()
         height, width = stdscr.getmaxyx()
+        max_lines = height - 1 # -1 leaves room for status bar
 
         # changing directory if "enter" key (coded 10 in ASCII) is pressed
         if k == 10:
 
             # get child currently selected by cursor
             if cursor_y != 0:
-                selected_child = current_folder.children[cursor_y - 1]
+                selected_child = current_folder.children[cursor_y - 1 + scrolling]
             else:
                 # select parent folder if cursor is on first line, which should contain ".."
                 selected_child = current_folder.parent
@@ -120,23 +121,24 @@ def user_interface(stdscr, root_folder):
             if type(selected_child) is MyFolder:
                 current_folder = selected_child
                 cursor_y = 0  # move cursor to first line
+                scrolling = 0 # reinitiate scrolling
 
         # get new cursor location
         if k == curses.KEY_DOWN:
             cursor_y = cursor_y + 1
+            if cursor_y > max_lines: # scroll down
+                scrolling += 1
         elif k == curses.KEY_UP:
             cursor_y = cursor_y - 1
+            if cursor_y < 0 and scrolling > 0: # scroll up
+                scrolling -= 1
 
         # rendering current folder
-        render_folder_contents(current_folder, stdscr)
+        render_folder_contents(current_folder, stdscr, scrolling, max_lines)
 
         # keep cursor inside the current tree bounds
         cursor_y = max(0, cursor_y)
-        cursor_y = min(len(current_folder.children), cursor_y)
-
-        # render debugging line
-        debuggingstr = "Next folder: {}".format(0)
-        stdscr.addstr(height - 2, 0, debuggingstr)
+        cursor_y = min(len(current_folder.children) - scrolling, cursor_y, max_lines)
 
         # render status bar
         statusbarstr = "Press 'q' to exit | Last key: {} | Current folder: {}".format(

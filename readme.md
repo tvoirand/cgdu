@@ -20,4 +20,4 @@ Python 3 with the following packages:
 
 ## Todo
 
-*   add scrolling
+*   clean up status bar
