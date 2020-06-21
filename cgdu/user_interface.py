@@ -119,7 +119,7 @@ def user_interface(stdscr, root_folder):
                 scrolling = 0  # reinitiate scrolling
 
         # changing to parent directory if left key is pressed
-        if k == curses.KEY_LEFT:
+        if k == curses.KEY_LEFT and not current_folder.parent == "root":
             current_folder = current_folder.parent
             cursor_y = 0  # move cursor to first line
             scrolling = 0  # reinitiate scrolling
