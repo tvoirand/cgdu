@@ -16,4 +16,15 @@ Python 3 with the following packages:
 *   Get google api client secrets
 *   Duplicate `example_client_secrets.json` in the `config` folder using `client_secrets.json` as filename and store your client-id and client-secret in the new file
 *   Install the dependencies, for example with a conda environement using the `environment.yml` file
+
+    `conda env create -f environment.yml`
+
+## Usage
+
 *   Run the `cgdu.py` script from within the root folder where `settings.yaml` is stored
+*   Wait until scanning is over
+*   Navigate with arrows, press 'q' to exit
+
+## Todo
+
+*   Add header and update footer
