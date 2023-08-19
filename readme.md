@@ -22,6 +22,7 @@ Python 3 with the following packages:
 ## Usage
 
 *   Run the `cgdu.py` script from within the root folder where `settings.yaml` is stored
+*   In case of authentication error, remove the file `config/credentials.json` and try again to perform authenticatin workflow in browser
 *   Wait until scanning is over
 *   Navigate with arrows, press 'q' to exit
 
